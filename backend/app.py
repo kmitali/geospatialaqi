@@ -10,7 +10,7 @@ API_TOKEN = "dd54d0ecebff369e45f9ff135004c150617233df"
 
 @app.route('/')
 def home():
-    return "Welcome to the AQI API! Use /aqi/<city> to get air quality data."
+    return "GEOCLOUD4AQI Backend is Running!"
 
 
 @app.route('/aqi/<city>', methods=['GET'])
@@ -21,4 +21,4 @@ def get_aqi(city):
     return jsonify(data)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000)
