@@ -1,0 +1,12 @@
+{
+  "name": "geospatialaqi",
+  "version": "1.0.0",
+  "description": "GeoCloud4AQI:AI-Driven Geospatial Air Quality Prediction and Visualization",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
