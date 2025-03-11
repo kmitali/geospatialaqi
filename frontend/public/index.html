@@ -3,36 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GEOCLOUD4AQI</title>
+    <title>GeoCloud4AQI</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <style>
         #map { height: 500px; }
     </style>
 </head>
 <body>
-    <h1>GEOCLOUD4AQI: Air Quality Index</h1>
+    <h1>GeoCloud4AQI: Air Quality Visualization</h1>
     <div id="map"></div>
+
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <script>
         // Initialize the map
-        var map = L.map('map').setView([20.5937, 78.9629], 5); // Center on India
+        var map = L.map('map').setView([20.5937, 78.9629], 5);
 
-        // Add a tile layer (map background)
+        // Add a tile layer
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 18,
         }).addTo(map);
 
-        // Fetch AQI data for a city and add a marker
-        async function fetchAQI(city, lat, lng) {
-            const response = await fetch(`http://127.0.0.1:5000/aqi/${city}`);
-            const data = await response.json();
-            const aqi = data.data.aqi;
-            L.marker([lat, lng]).addTo(map)
-                .bindPopup(`${city} AQI: ${aqi}`);
-        }
+        // Load QGIS-processed GeoJSON data
+        fetch('http://127.0.0.1:5000/aqi-data')
+            .then(response => response.json())
+            .then(data => {
+                L.geoJSON(data, {
+                    style: function (feature) {
+                        return { color: getColor(feature.properties.aqi) };
+                    }
+                }).addTo(map);
+            });
 
-        // Example: Fetch AQI for Delhi
-        fetchAQI('delhi', 28.6139, 77.2090);
+        // Get color based on AQI
+        function getColor(aqi) {
+            return aqi > 150 ? 'red' :
+                   aqi > 100 ? 'orange' :
+                   aqi > 50  ? 'yellow' :
+                               'green';
+        }
     </script>
 </body>
 </html>
